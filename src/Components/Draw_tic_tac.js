@@ -25,7 +25,7 @@ function Draw_tic_tac({ player, handleplayer }) {
             for (let i = 0; i < 9; i++) {
                 ans |= (record[i] === record[i + 3] && record[i + 3] === record[i + 6] && record[i] !== 'Y');
             }
-            ans |= ((record[0] === record[4] && record[4] === record[8] && record[0] !== 'Y') || (record[3] === record[4] && record[4] === record[6] && record[6] !== 'Y'));
+            ans |= ((record[0] === record[4] && record[4] === record[8] && record[0] !== 'Y') || (record[2] === record[4] && record[4] === record[6] && record[6] !== 'Y'));
 
             return ans;
         }

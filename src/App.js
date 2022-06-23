@@ -4,7 +4,7 @@ import './App.css';
 import Draw_tic_tac from './Components/Draw_tic_tac';
 
 function App() {
-  const [turnX, setTurnX] = useState(true);
+  // const [turnX, setTurnX] = useState(true);
   const [player, setPlayer] = useState('X');
   const handleplayer = () => {
     if (player === 'X') {
