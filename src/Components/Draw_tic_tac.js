@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-function Draw_tic_tac({ player, handleplayer }) {
+function Draw_tic_tac({ player, handleplayer, handlewinO, handlewinX, inc, handleInc }) {
     const [record, setRecord] = useState([
         'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'
     ]);
@@ -13,8 +13,20 @@ function Draw_tic_tac({ player, handleplayer }) {
                 return j === id ? (item === 'Y' ? player : item) : item
             })
         })
-        if(record[id] === 'Y')
+        if (record[id] === 'Y')
+            handleplayer();
+    }
+    const Restartgame = ()=>{
+        setRecord(Element => {
+            return Element.map(() => {
+                // console.log(j === id ? (item === 'Y' ? player : item): item)
+                return 'Y';
+            })
+        })
+        setWinM('');
+        if(player === 'O')
         handleplayer();
+        handleInc();
     }
     useEffect(() => {
         const checkwin = () => {
@@ -38,21 +50,31 @@ function Draw_tic_tac({ player, handleplayer }) {
             return count === 9;
         }
         if (checkwin()) {
-            if (player === 'X')
+            if (player === 'X') {
+                if (inc) {
+                    handlewinO();
+                    handleInc();
+                }
                 setWinM('Player O win');
-            else
+            }
+            else {
+                if (inc) {
+                    handlewinX();
+                    handleInc();
+                }
                 setWinM('Player X win');
+            }
         }
-        if (checkdraw()) {
+        else if (checkdraw()) {
             setWinM('Game Draw');
         }
-        console.log(winM);
+        // console.log(winM);
     })
 
     return (
         <>
             <div className='relative flex my-2 justify-center items-center md:my-32 sm:mx-12'>
-                <div className="grid grid-cols-3 w-96 gap-1"style={winM?{opacity:"0.3"}:null}>
+                <div className="grid grid-cols-3 w-96 gap-1" style={winM ? { opacity: "0.3" } : null}>
                     {record.map((record, index) => (
                         <div key={index} className="border shadow-lg rounded-lg h-32 w-32 bg-gray-500 flex justify-content items-center hover:bg-gray-400 cursor-pointer" onClick={() => handleclick(index)} style={record === 'X' ? { backgroundColor: "red" } : record === 'O' ? { backgroundColor: "rgb(255, 68, 0)" } : null}>
                             <span className='text-[5rem] font-semibold items-center text-gray-500 w-full text-center hover:text-white hover:block'>{record === 'X' ? 'X' : record === 'O' ? 'O' : player}</span>
@@ -61,9 +83,9 @@ function Draw_tic_tac({ player, handleplayer }) {
                     )}
                 </div>
                 {winM ? <div className="flex flex-col absolute z-10 items-center justify-center text-center h-full bg-slate-200 text-black w-96 opacity-40">
-                <span className='text-3xl font-bold opacity-100'>{winM}</span>
-                <a href="./Draw_tic_tac.js"><button className='bg-gray-800 p-2 m-2 text-lg rounded shadow-lg text-white'>Restart</button></a>
-            </div> : null}
+                    <span className='text-3xl font-bold opacity-100'>{winM}</span>
+                    <button className='bg-gray-800 p-2 m-2 text-lg rounded shadow-lg text-white' onClick={Restartgame}>Restart</button>
+                </div> : null}
             </div>
         </>
     )
