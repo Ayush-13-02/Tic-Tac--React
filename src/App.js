@@ -1,24 +1,25 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+// import Changeturn from './Components/Changeturn';
+import Draw_tic_tac from './Components/Draw_tic_tac';
 
 function App() {
+  const [turnX, setTurnX] = useState(true);
+  const [player, setPlayer] = useState('X');
+  const handleplayer = () => {
+    if (player === 'X') {
+      setPlayer('O');
+    }
+    else {
+      setPlayer('X')
+    }
+  }
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/* <Changeturn player = {player} handleplayer = {handleplayer}/> */}
+      <Draw_tic_tac player = {player} handleplayer = {handleplayer}/>
+    </>
   );
 }
 
