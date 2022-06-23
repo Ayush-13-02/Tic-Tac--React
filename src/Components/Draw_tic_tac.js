@@ -61,7 +61,7 @@ function Draw_tic_tac({ player, handleplayer }) {
                 </div>
                 {winM ? <div className="flex flex-col absolute z-10 items-center justify-center text-center h-full bg-slate-200 text-black w-96 opacity-40">
                 <span className='text-3xl font-bold opacity-100'>{winM}</span>
-                <a href="/"><button className='bg-gray-800 p-2 m-2 text-lg rounded shadow-lg text-white'>Restart</button></a>
+                <a href="./Draw_tic_tac.js"><button className='bg-gray-800 p-2 m-2 text-lg rounded shadow-lg text-white'>Restart</button></a>
             </div> : null}
             </div>
         </>
