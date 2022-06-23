@@ -13,6 +13,7 @@ function Draw_tic_tac({ player, handleplayer }) {
                 return j === id ? (item === 'Y' ? player : item) : item
             })
         })
+        if(record[id] === 'Y')
         handleplayer();
     }
     useEffect(() => {
