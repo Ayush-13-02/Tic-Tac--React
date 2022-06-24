@@ -67,24 +67,27 @@ function Draw_tic_tac({ player, handleplayer, handlewinO, handlewinX, inc, handl
         }
         else if (checkdraw()) {
             setWinM('Game Draw');
+            if(inc)
+            handleInc();
         }
-        // console.log(winM);
-    })
+        console.log(inc);
+    },[record,handleInc,handlewinO,handlewinX,inc,player,winM])
 
     return (
         <>
-            <div className='relative flex my-2 justify-center items-center md:my-32 sm:mx-12'>
+            <div className='relative flex flex-col my-2 justify-center items-center md:my-16 sm:mx-12'>
+                <h1 className='m-4 shadow-2xl bg-blue-100 p-2 rounded-lg text-6xl text-center font-serif font-semibold bg-gradient-to-tr text-blue-800 animate-bounce'>Tic Tac Toe</h1>
                 <div className="grid grid-cols-3 w-96 gap-1" style={winM ? { opacity: "0.3" } : null}>
                     {record.map((record, index) => (
-                        <div key={index} className="border shadow-lg rounded-lg h-32 w-32 bg-gray-500 flex justify-content items-center hover:bg-gray-400 cursor-pointer" onClick={() => handleclick(index)} style={record === 'X' ? { backgroundColor: "red" } : record === 'O' ? { backgroundColor: "rgb(255, 68, 0)" } : null}>
-                            <span className='text-[5rem] font-semibold items-center text-gray-500 w-full text-center hover:text-white hover:block'>{record === 'X' ? 'X' : record === 'O' ? 'O' : player}</span>
+                        <div key={index} className="border shadow-xl rounded-lg h-28 w-28 m-[2px] bg-gray-500 flex justify-content items-center hover:bg-gray-400 hover:p-2 cursor-pointer" onClick={() => handleclick(index)} style={record === 'X' ? { backgroundColor: "red" } : record === 'O' ? { backgroundColor: "rgb(255, 68, 0)" } : null}>
+                            <span className='text-[5rem] font-semibold items-center select-none text-gray-500 w-full text-center hover:text-white hover:block '>{record === 'X' ? 'X' : record === 'O' ? 'O' : player}</span>
                         </div>
                     )
                     )}
                 </div>
                 {winM ? <div className="flex flex-col absolute z-10 items-center justify-center text-center h-full bg-slate-200 text-black w-96 opacity-40">
                     <span className='text-3xl font-bold opacity-100'>{winM}</span>
-                    <button className='bg-gray-800 p-2 m-2 text-lg rounded shadow-lg text-white' onClick={Restartgame}>Restart</button>
+                    <button className='bg-red-800 p-2 m-2 text-lg rounded shadow-lg text-white' onClick={Restartgame}>Restart</button>
                 </div> : null}
             </div>
         </>

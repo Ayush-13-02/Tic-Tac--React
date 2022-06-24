@@ -28,11 +28,11 @@ function App() {
   return (
     <>
       {/* <Changeturn player = {player} handleplayer = {handleplayer}/> */}
-      <div className='flex flex-col md:flex-row items-center justify-center'>
+      <div className='flex flex-col md:flex-row items-center justify-center bg-orange-200 h-screen'>
         <Draw_tic_tac player={player} handleplayer={handleplayer} handlewinO={handlewinO} handlewinX={handlewinX} inc = {inc} handleInc = {handleInc} />
         <div className='m-8'>
-          <div className='m-2 p-2 border shadow-xl bg-red-700 rounded-lg text-white text-2xl'>PlayerX win : {countwinX}</div>
-          <div className='m-2 p-2 border shadow-xl bg-orange-700 rounded-lg text-white text-2xl'>PlayerO win : {countwinO}</div>
+          <div className='m-2 p-2 border shadow-xl bg-red-600 rounded-lg text-white text-2xl animate-pulse'>PlayerX win : {countwinX}</div>
+          <div className='m-2 p-2 border shadow-xl bg-orange-600 rounded-lg text-white text-2xl animate-pulse'>PlayerO win : {countwinO}</div>
         </div>
       </div>
     </>
