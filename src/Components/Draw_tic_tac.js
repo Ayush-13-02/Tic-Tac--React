@@ -6,7 +6,6 @@ function Draw_tic_tac({ player, handleplayer, handlewinO, handlewinX, inc, handl
     ]);
     const [winM, setWinM] = useState('')
     const handleclick = (id) => {
-        // console.log(record,id);
         setRecord(Element => {
             return Element.map((item, j) => {
                 // console.log(j === id ? (item === 'Y' ? player : item): item)
