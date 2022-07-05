@@ -70,7 +70,6 @@ function Draw_tic_tac({ player, handleplayer, handlewinO, handlewinX, inc, handl
             if(inc)
             handleInc();
         }
-        console.log(inc);
     },[record,handleInc,handlewinO,handlewinX,inc,player,winM])
 
     return (
