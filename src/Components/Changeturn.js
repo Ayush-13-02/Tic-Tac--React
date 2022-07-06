@@ -12,8 +12,10 @@ function Changeturn({ player, handleplayer, handlewinO, handlewinX, inc, handleI
   ])
   const updatematrix = (i, j, value) => {
     let copy = [...matrix];
+    // if (copy[i][j] === null){
     copy[i][j] = value;
     setMatrix(copy);
+    // }
   }
   const equal3 = (a, b, c) => {
     if (a === b && b === c && c !== null) return true;
@@ -69,7 +71,7 @@ function Changeturn({ player, handleplayer, handlewinO, handlewinX, inc, handleI
   const minmax = (depth, isMaximising) => {
     let result = ChexkResult(isMaximising);
     if (result !== null) {
-      return result;
+      return result / (depth + 1);
     }
     if (isMaximising) {
       let bestScore = -Infinity;
@@ -109,6 +111,7 @@ function Changeturn({ player, handleplayer, handlewinO, handlewinX, inc, handleI
           let score = minmax(0, false);
           updatematrix(i, j, null);
           // bestScore = Math.max(score, bestScore);
+          // console.log(score,i,j);
           if (score > bestScore) {
             bestScore = score;
             bestmove.x = i;
@@ -139,104 +142,117 @@ function Changeturn({ player, handleplayer, handlewinO, handlewinX, inc, handleI
   }
 
   const handleclick = (id) => {
-    { id < 3 ? updatematrix(0, id, human) : (id < 6 && id > 2) ? matrix[1][id - 3] = 'X' : matrix[2][id - 6] = 'X' }
+    if (player === 'X') {
+      // { id < 3 ?(if(matrix[0][id]===null) updatematrix(0, id, human)) : (id < 6 && id > 2) ? (matrix[1][id-3]===null? updatematrix(1, id-3, human):null) : (matrix[2][id-6]===null? updatematrix(2, id-6, human):null) }
+      if (id < 3) {
+        if (matrix[0][id] === null) updatematrix(0, id, human);
+      }
+      else if (id < 6 && id > 2) {
+        if (matrix[1][id - 3] === null) updatematrix(1, id - 3, human);
+      }
+      else {
+        if (matrix[2][id - 6] === null) updatematrix(2, id - 6, human);
+        console.log(human);
+      }
     setRecord(Element => {
       return Element.map((item, j) => {
         return j === id ? (item === null ? player : item) : item
       })
     })
+    if(record[id]===null)
     handleplayer();
   }
-  const Restartgame = ()=>{
-    setRecord(Element => {
-        return Element.map(() => {
-            // console.log(j === id ? (item === 'Y' ? player : item): item)
-            return null;
-        })
-    })
-    let mat = [
-      [null, null, null],
-      [null, null, null],
-      [null, null, null]
-    ]
-    setMatrix(mat);
-    if(player === 'O') handleplayer();
-    handleInc();
-    setWinM(null);
 }
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (player === 'O' && winM == null) {
-        bestMove();
-        updaterecord();
-        // handleplayer();
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [player, bestMove, updaterecord,winM]);
-  useEffect(() => {
-    const checkwin = () => {
-      let ans = false;
-      for (let i = 0; i < 9; i += 3) {
-        ans |= (record[i] === record[i + 1] && record[i + 1] === record[i + 2] && record[i] !== null);
-      }
-      for (let i = 0; i < 9; i++) {
-        ans |= (record[i] === record[i + 3] && record[i + 3] === record[i + 6] && record[i] !== null);
-      }
-      ans |= ((record[0] === record[4] && record[4] === record[8] && record[0] !== null) || (record[2] === record[4] && record[4] === record[6] && record[6] !== null));
+const Restartgame = () => {
+  setRecord(Element => {
+    return Element.map(() => {
+      // console.log(j === id ? (item === 'Y' ? player : item): item)
+      return null;
+    })
+  })
+  let mat = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null]
+  ]
+  setMatrix(mat);
+  if (player === 'O') handleplayer();
+  handleInc();
+  setWinM(null);
+}
+useEffect(() => {
+  const interval = setInterval(() => {
+    if (player === 'O' && winM == null) {
+      bestMove();
+      updaterecord();
+      // handleplayer();
+    }
+  }, 1000);
+  return () => clearInterval(interval);
+}, [player, bestMove, updaterecord, winM]);
+useEffect(() => {
+  const checkwin = () => {
+    let ans = false;
+    for (let i = 0; i < 9; i += 3) {
+      ans |= (record[i] === record[i + 1] && record[i + 1] === record[i + 2] && record[i] !== null);
+    }
+    for (let i = 0; i < 9; i++) {
+      ans |= (record[i] === record[i + 3] && record[i + 3] === record[i + 6] && record[i] !== null);
+    }
+    ans |= ((record[0] === record[4] && record[4] === record[8] && record[0] !== null) || (record[2] === record[4] && record[4] === record[6] && record[6] !== null));
 
-      return ans;
+    return ans;
+  }
+  const checkdraw = () => {
+    let count = 0;
+    for (let i = 0; i < 9; i++) {
+      if (record[i] !== null)
+        count++;
     }
-    const checkdraw = () => {
-      let count = 0;
-      for (let i = 0; i < 9; i++) {
-        if (record[i] !== null)
-          count++;
-      }
-      return count === 9;
-    }
-    if (checkwin()) {
-      if (player === 'X') {
-        if (inc) {
-          handlewinO();
-          handleInc();
-        }
-        setWinM('Player O win');
-      }
-      else {
-        if (inc) {
-          handlewinX();
-          handleInc();
-        }
-        setWinM('Player X win');
-      }
-    }
-    else if (checkdraw()) {
-      setWinM('Game Draw');
-      if (inc)
+    return count === 9;
+  }
+  if (checkwin()) {
+    if (player === 'X') {
+      if (inc) {
+        handlewinO();
         handleInc();
+      }
+      setWinM('Player O win');
     }
-  }, [record,handleInc,handlewinO,handlewinX,inc,player,winM])
+    else {
+      if (inc) {
+        handlewinX();
+        handleInc();
+      }
+      setWinM('Player X win');
+    }
+  }
+  else if (checkdraw()) {
+    setWinM('Game Draw');
+    if (inc)
+      handleInc();
+  }
+}, [record, handleInc, handlewinO, handlewinX, inc, player, winM])
 
-  return (
-    <>
-      <div className='relative flex flex-col my-2 justify-center items-center md:my-32 sm:mx-12'>
+return (
+  <>
+    <div className='relative flex flex-col my-2 justify-center items-center md:my-32 sm:mx-12'>
       <h1 className='m-4 shadow-2xl bg-blue-100 p-2 rounded-lg text-6xl text-center font-serif font-semibold bg-gradient-to-tr text-blue-800 animate-bounce'>Tic Tac Toe</h1>
-        <div className="grid grid-cols-3 w-96 gap-1" style={winM ? { opacity: "0.3" } : null}>
-          {record.map((record, index) => (
-            <div key={index} className="border shadow-lg rounded-lg h-32 w-32 bg-gray-500 flex justify-content items-center hover:bg-gray-400 cursor-pointer" onClick={() => handleclick(index)} style={record === 'X' ? { backgroundColor: "red" } : record === 'O' ? { backgroundColor: "rgb(255, 68, 0)" } : null}>
-              <span className='text-[5rem] font-semibold items-center text-gray-500 w-full text-center hover:text-white hover:block'>{record === 'X' ? 'X' : record === 'O' ? 'O' : player}</span>
-            </div>
-          )
-          )}
-        </div>
-        {winM!==null ? <div className="flex flex-col absolute z-10 items-center justify-center text-center h-full bg-slate-200 text-black w-96 opacity-40">
-          <span className='text-3xl font-bold opacity-100'>{winM}</span>
-          <button className='bg-gray-800 p-2 m-2 text-lg rounded shadow-lg text-white' onClick={Restartgame}>Restart</button>
-        </div> : null}
+      <div className="grid grid-cols-3 w-96 gap-1" style={winM ? { opacity: "0.3" } : null}>
+        {record.map((record, index) => (
+          <div key={index} className="border shadow-lg rounded-lg h-32 w-32 bg-gray-500 flex justify-content items-center hover:bg-gray-400 cursor-pointer" onClick={() => handleclick(index)} style={record === 'X' ? { backgroundColor: "red" } : record === 'O' ? { backgroundColor: "rgb(255, 68, 0)" } : null}>
+            <span className='text-[5rem] font-semibold items-center text-gray-500 w-full text-center hover:text-white hover:block'>{record === 'X' ? 'X' : record === 'O' ? 'O' : player}</span>
+          </div>
+        )
+        )}
       </div>
-    </>
-  )
+      {winM !== null ? <div className="flex flex-col absolute z-10 items-center justify-center text-center h-full bg-slate-200 text-black w-96 opacity-40">
+        <span className='text-3xl font-bold opacity-100'>{winM}</span>
+        <button className='bg-gray-800 p-2 m-2 text-lg rounded shadow-lg text-white' onClick={Restartgame}>Restart</button>
+      </div> : null}
+    </div>
+  </>
+)
 }
 
 export default Changeturn
